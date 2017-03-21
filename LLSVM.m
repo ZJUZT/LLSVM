@@ -7,16 +7,27 @@ rng('default');
 % parameters
 iter_num = 1;
 epoch = 10;
-learning_rate = 1e-2;
+learning_rate = 1e-1;
 
-loss_svm_test = zeros(iter_num, epoch);
-loss_svm_train = zeros(iter_num, epoch);
-accuracy_svm = zeros(iter_num, epoch);
+% locally linear anchor points
+anchors_num = 20;
+nearest_neighbor = 5;
+
+beta = 1.0;
+
+loss_llsvm_test = zeros(iter_num, epoch);
+loss_llsvm_train = zeros(iter_num, epoch);
+accuracy_llsvm = zeros(iter_num, epoch);
 
 for i=1:iter_num
-    b = 0;
-    W = zeros(1,p);
-    loss_cumulative_svm = zeros(1, num_sample);                                     
+    b = zeros(1, anchors_num);
+    W = zeros(p, anchors_num);
+    loss_cumulative_llsvm = zeros(1, num_sample);                                     
+    
+    % initial anchor points via K-means
+    fprintf('Start K-means...\n');
+    [~, anchors, ~, ~, ~] = litekmeans(train_X, anchors_num,'MaxIter', 100, 'Replicates', 1);
+    fprintf('K-means done..\n');
     
     % shuffle
     re_idx = randperm(num_sample);
@@ -35,7 +46,12 @@ for i=1:iter_num
             X = X_train(j,:);
             y = Y_train(j,:);
             
-            y_predict = W*X' + b;
+            % pick nearest anchor points
+            [anchor_idx, weight] = knn(anchors, X, nearest_neighbor, beta);
+            gamma = weight / sum(weight);
+            
+            y_anchor = X * W(:,anchor_idx) + b(anchor_idx);
+            y_predict = gamma * y_anchor';
             
             % hinge loss
             err = 1 - y * y_predict;
@@ -43,18 +59,18 @@ for i=1:iter_num
             % cumulative training hinge loss
             idx = (t-1)*num_sample + j;
             if idx == 1
-                loss_cumulative_svm(idx) = max(0,err);
+                loss_cumulative_llsvm(idx) = max(0,err);
             else
-                loss_cumulative_svm(idx) = (loss_cumulative_svm(idx-1) * (idx-1) + max(0,err))/idx;
+                loss_cumulative_llsvm(idx) = (loss_cumulative_llsvm(idx-1) * (idx-1) + max(0,err))/idx;
             end
             
             % record loss epoch-wise
-            loss_svm_train(i, t) = loss_cumulative_svm(idx);
+            loss_llsvm_train(i, t) = loss_cumulative_llsvm(idx);
             
             % sgd update
             if err > 0
-                W = W + learning_rate*y * X;
-                b = b + learning_rate*y;
+                W(:,anchor_idx) = W(:,anchor_idx) + learning_rate * y * repmat(gamma,p,1) .* repmat(X',1,nearest_neighbor);
+                b(anchor_idx) = b(anchor_idx) + learning_rate * y * gamma;
             end
         end
         
@@ -67,15 +83,21 @@ for i=1:iter_num
         
         for k=1:num_sample_test
             
-            if mod(k,1e5)==0
+            if mod(k,1e4)==0
                 fprintf('%d epoch(validation)---processing %dth sample\n',i, k);
             end
             
             X = test_X(k,:);
             y = test_Y(k,:);
             
-            y_predict = W*X' + b;
+            [anchor_idx, weight] = knn(anchors, X, nearest_neighbor, beta);
+            gamma = weight / sum(weight);
+            
+            y_anchor = X * W(:,anchor_idx) + b(anchor_idx);
+            y_predict = gamma * y_anchor';
+            
             err = 1 - y * y_predict;
+            
             loss = loss + max(0, err);
             
             % accuracy
@@ -85,10 +107,10 @@ for i=1:iter_num
         end
         
         % record test hinge loss epoch-wise
-        loss_svm_test(i, t) = loss / num_sample_test;
+        loss_llsvm_test(i, t) = loss / num_sample_test;
         
         % record test accuracy epoch-wise
-        accuracy_svm(i,t) = correct_num / num_sample_test;
+        accuracy_llsvm(i,t) = correct_num / num_sample_test;
         
         toc;
         fprintf('validation done\n');
@@ -98,7 +120,7 @@ end
 
 
 %% plot cumulative learning curve
-plot(loss_cumulative_svm, 'DisplayName', 'Linear SVM');
+plot(loss_cumulative_llsvm, 'DisplayName', 'LLSVM');
 legend('-DynamicLegend');
 xlabel('Number of samples seen');
 ylabel('Hinge loss');
