@@ -7,11 +7,14 @@ rng('default');
 % parameters
 iter_num = 1;
 epoch = 10;
-learning_rate = 1e-1;
+learning_rate = 8e4;
+
+t0 = 1e4;
+skip = 1e3 ;
 
 % locally linear anchor points
-anchors_num = 20;
-nearest_neighbor = 5;
+anchors_num = 100;
+nearest_neighbor = 8;
 
 beta = 1.0;
 
@@ -34,8 +37,11 @@ for i=1:iter_num
     X_train = train_X(re_idx,:);
     Y_train = train_Y(re_idx,:);
     
+    count = skip;
+    
     for t=1:epoch
         tic;
+        
         for j=1:num_sample
             if mod(j,1e3)==0
                 toc;
@@ -69,8 +75,15 @@ for i=1:iter_num
             
             % sgd update
             if err > 0
-                W(:,anchor_idx) = W(:,anchor_idx) + learning_rate * y * repmat(gamma,p,1) .* repmat(X',1,nearest_neighbor);
-                b(anchor_idx) = b(anchor_idx) + learning_rate * y * gamma;
+                W(:,anchor_idx) = W(:,anchor_idx) + learning_rate / (idx + t0) * y * repmat(gamma,p,1) .* repmat(X',1,nearest_neighbor);
+                b(anchor_idx) = b(anchor_idx) + learning_rate / (idx + t0) * y * gamma;
+            end
+            
+            % regularization
+            count = count - 1;
+            if count <= 0
+                W(:,anchor_idx) = W(:,anchor_idx) * (1 - skip/(idx + t0));
+                count = skip;
             end
         end
         

@@ -7,12 +7,14 @@ rng('default');
 % parameters
 iter_num = 1;
 epoch = 10;
-learning_rate = 2e-2;
+learning_rate = 1e4;
+t0 = 1e4;
+skip = 1e2;
 
 % locally linear anchor points
-anchors_num = 20;
+anchors_num = 100;
 
-LC = 0.4;
+LC = 1;
 
 loss_JO_test = zeros(iter_num, epoch);
 loss_JO_train = zeros(iter_num, epoch);
@@ -37,6 +39,8 @@ for i=1:iter_num
     re_idx = randperm(num_sample);
     X_train = train_X(re_idx,:);
     Y_train = train_Y(re_idx,:);
+    
+    count = skip;
     
     for t=1:epoch
         num_nn_batch = 0;
@@ -92,14 +96,21 @@ for i=1:iter_num
             
             % sgd update
             if err > 0
-                W(:,anchor_idx) = W(:,anchor_idx) + learning_rate * y * repmat(gamma,p,1) .* repmat(X',1,nearest_neighbor);
-                b(anchor_idx) = b(anchor_idx) + learning_rate * y * gamma;
+                W(:,anchor_idx) = W(:,anchor_idx) + learning_rate / (idx + t0) * y * repmat(gamma,p,1) .* repmat(X',1,nearest_neighbor);
+                b(anchor_idx) = b(anchor_idx) + learning_rate / (idx + t0) * y * gamma;
                 
                 % update anchor points (SAPL)
                 s = 2 * LC * (repmat(X, nearest_neighbor, 1) - anchors(anchor_idx, :));
                 base = -s * sum(weight.*y_anchor);
                 base = base + repmat(y_anchor',1,p).* s*sum(weight);
-                anchors(anchor_idx,:) = anchors(anchor_idx,:) + learning_rate * (y* base/(sum(weight).^2));
+                anchors(anchor_idx,:) = anchors(anchor_idx,:) + learning_rate / (idx + t0) * (y* base/(sum(weight).^2));
+            end
+            
+            % regularization
+            count = count - 1;
+            if count <= 0
+                W(:,anchor_idx) = W(:,anchor_idx) * (1 - skip/(idx + t0));
+                count = skip;
             end
             
         end
