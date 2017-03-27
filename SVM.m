@@ -7,7 +7,7 @@ rng('default');
 % parameters
 iter_num = 1;
 epoch = 10;
-learning_rate = 1e-2;
+learning_rate = 1e-1;
 
 loss_svm_test = zeros(iter_num, epoch);
 loss_svm_train = zeros(iter_num, epoch);

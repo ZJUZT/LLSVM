@@ -7,9 +7,9 @@ rng('default');
 % parameters
 iter_num = 1;
 epoch = 10;
-learning_rate = 5e4;
+learning_rate = 5e2;
 t0 = 1e4;
-skip = 1e3;
+skip = 1e1;
 
 % locally linear anchor points
 anchors_num = 100;
@@ -22,14 +22,19 @@ loss_SAPL_train = zeros(iter_num, epoch);
 accuracy_SAPL = zeros(iter_num, epoch);
 
 for i=1:iter_num
-    b = zeros(1, anchors_num);
-    W = zeros(p, anchors_num);
+%     b = zeros(1, anchors_num);
+%     W = zeros(p, anchors_num);
+    
     loss_cumulative_SAPL = zeros(1, num_sample);                                     
     
     % initial anchor points via K-means
     fprintf('Start K-means...\n');
     [~, anchors, ~, ~, ~] = litekmeans(train_X, anchors_num,'MaxIter', 100, 'Replicates', 1);
     fprintf('K-means done..\n');
+    
+    fprintf('Start liblinear initialization...\n');
+    [W, b] = initial_paras(train_X, train_Y, anchors);
+    fprintf('liblinear initialization done..\n');
     
     % shuffle
     re_idx = randperm(num_sample);

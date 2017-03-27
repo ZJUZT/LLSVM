@@ -7,14 +7,14 @@ rng('default');
 % parameters
 iter_num = 1;
 epoch = 10;
-learning_rate = 1e4;
+learning_rate = 8e3;
 t0 = 1e4;
 skip = 1e2;
 
 % locally linear anchor points
 anchors_num = 100;
 
-LC = 1;
+LC = 0.2;
 
 loss_JO_test = zeros(iter_num, epoch);
 loss_JO_train = zeros(iter_num, epoch);
