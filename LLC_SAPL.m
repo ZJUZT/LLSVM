@@ -7,7 +7,7 @@ rng('default');
 % parameters
 iter_num = 1;
 epoch = 10;
-learning_rate = 5e2;
+learning_rate = 1e3;
 t0 = 1e4;
 skip = 1e1;
 

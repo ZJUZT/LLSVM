@@ -7,14 +7,14 @@ rng('default');
 % parameters
 iter_num = 1;
 epoch = 10;
-learning_rate = 8e3;
+learning_rate = 5e2;
 t0 = 1e4;
-skip = 1e2;
+skip = 1e1;
 
 % locally linear anchor points
 anchors_num = 100;
 
-LC = 0.2;
+LC = 2;
 
 loss_JO_test = zeros(iter_num, epoch);
 loss_JO_train = zeros(iter_num, epoch);
@@ -26,14 +26,18 @@ for i=1:iter_num
     minmum_K = 100;
     maximum_K = 0;
     
-    b = zeros(1, anchors_num);
-    W = zeros(p, anchors_num);
+%     b = zeros(1, anchors_num);
+%     W = zeros(p, anchors_num);
     loss_cumulative_JO = zeros(1, num_sample);                                     
     
     % initial anchor points via K-means
     fprintf('Start K-means...\n');
     [~, anchors, ~, ~, ~] = litekmeans(train_X, anchors_num,'MaxIter', 100, 'Replicates', 1);
     fprintf('K-means done..\n');
+    
+    fprintf('Start liblinear initialization...\n');
+    [W, b] = initial_paras(train_X, train_Y, anchors);
+    fprintf('liblinear initialization done..\n');
     
     % shuffle
     re_idx = randperm(num_sample);
