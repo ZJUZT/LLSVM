@@ -6,35 +6,35 @@ rng('default');
 
 % parameters
 iter_num = 1;
-epoch = 10;
+epoch = 50;
 learning_rate = 1e3;
-t0 = 1e4;
+t0 = 1e5;
 skip = 1e1;
 
 % locally linear anchor points
-anchors_num = 100;
-nearest_neighbor = 8;
+anchors_num = 50;
+nearest_neighbor = 5;
 
-beta = 1.0;
+beta = 1e1;
 
 loss_SAPL_test = zeros(iter_num, epoch);
 loss_SAPL_train = zeros(iter_num, epoch);
 accuracy_SAPL = zeros(iter_num, epoch);
 
 for i=1:iter_num
-%     b = zeros(1, anchors_num);
-%     W = zeros(p, anchors_num);
+    b = zeros(1, anchors_num);
+    W = zeros(p, anchors_num);
     
     loss_cumulative_SAPL = zeros(1, num_sample);                                     
     
     % initial anchor points via K-means
     fprintf('Start K-means...\n');
-    [~, anchors, ~, ~, ~] = litekmeans(train_X, anchors_num,'MaxIter', 100, 'Replicates', 1);
+    [~, anchors, ~, ~, ~] = litekmeans(train_X, anchors_num,'MaxIter', 1000, 'Replicates', 10);
     fprintf('K-means done..\n');
     
-    fprintf('Start liblinear initialization...\n');
-    [W, b] = initial_paras(train_X, train_Y, anchors);
-    fprintf('liblinear initialization done..\n');
+%     fprintf('Start liblinear initialization...\n');
+%     [W, b] = initial_paras(train_X, train_Y, anchors);
+%     fprintf('liblinear initialization done..\n');
     
     % shuffle
     re_idx = randperm(num_sample);
@@ -123,7 +123,7 @@ for i=1:iter_num
             
             loss = loss + max(0, err);
             
-            % accuracy
+            % accuracy 
             if (y_predict>=0 && y==1) || (y_predict<0&&y==-1)
                 correct_num = correct_num + 1;
             end
@@ -147,4 +147,13 @@ plot(loss_cumulative_SAPL, 'DisplayName', 'LLC-SAPL');
 legend('-DynamicLegend');
 xlabel('Number of samples seen');
 ylabel('Hinge loss');
+grid on;
+
+%% plot learning curve epoch-wise
+hold on
+plot(loss_SAPL_train, 'DisplayName', 'LLC-SAPL');
+legend('-DynamicLegend');
+xlabel('epoch');
+ylabel('Hinge loss');
+title('Cumulative Learning Curve')
 grid on;

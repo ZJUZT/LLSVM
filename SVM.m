@@ -6,12 +6,17 @@ rng('default');
 
 % parameters
 iter_num = 1;
-epoch = 10;
-learning_rate = 1e-1;
+epoch = 50;
+learning_rate = 1e4;
+
+t0 = 1e5;
+skip = 1e1;
 
 loss_svm_test = zeros(iter_num, epoch);
 loss_svm_train = zeros(iter_num, epoch);
 accuracy_svm = zeros(iter_num, epoch);
+
+count = skip;
 
 for i=1:iter_num
     b = 0;
@@ -53,8 +58,15 @@ for i=1:iter_num
             
             % sgd update
             if err > 0
-                W = W + learning_rate*y * X;
-                b = b + learning_rate*y;
+                W = W + learning_rate / (idx + t0) *y * X;
+                b = b + learning_rate / (idx + t0) *y;
+            end
+            
+            % regularization
+            count = count - 1;
+            if count <= 0
+                W = W * (1 - skip/(idx + t0));
+                count = skip;
             end
         end
         
@@ -104,4 +116,16 @@ xlabel('Number of samples seen');
 ylabel('Hinge loss');
 grid on;
 
+%% plot learning curve epoch-wise
+hold on;
+plot(loss_svm_train, 'DisplayName', 'SVM');
+legend('-DynamicLegend');
+xlabel('epoch');
+ylabel('Hinge loss');
+title('Cumulative Learning Curve')
+grid on;
+
+%% liblinear
+model = liblinear_train(train_Y, sparse(train_X), '-s 3');
+[~, accuracy,~] = liblinear_predict(test_Y, sparse(test_X), model);
 

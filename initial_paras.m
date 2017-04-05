@@ -18,7 +18,7 @@ function [W, b] = initial_paras(X, Y, centroids)
     end
     
     % liblinear
-    model = liblinear_train(Y, sparse(new_X));
+    model = liblinear_train(Y, sparse(new_X),'-s 2');
     W = reshape(model.w,[p+1, c]);
     b = W(end,:);
     W = W(1:end-1,:);

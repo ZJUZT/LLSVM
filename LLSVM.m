@@ -6,17 +6,17 @@ rng('default');
 
 % parameters
 iter_num = 1;
-epoch = 10;
-learning_rate = 1e3;
+epoch = 50 ;
+learning_rate = 1e5;
 
-t0 = 1e4;
-skip = 1e3 ;
+t0 = 1e5;
+skip = 1e1;
 
 % locally linear anchor points
-anchors_num = 100;
-nearest_neighbor = 8;
+anchors_num = 50; 
+nearest_neighbor = 5;
 
-beta = 1.0;
+beta = 1;
 
 loss_llsvm_test = zeros(iter_num, epoch);
 loss_llsvm_train = zeros(iter_num, epoch);
@@ -29,7 +29,7 @@ for i=1:iter_num
     
     % initial anchor points via K-means
     fprintf('Start K-means...\n');
-    [~, anchors, ~, ~, ~] = litekmeans(train_X, anchors_num,'MaxIter', 100, 'Replicates', 1);
+    [~, anchors, ~, ~, ~] = litekmeans(train_X, anchors_num,'MaxIter', 1000, 'Replicates', 10);
     fprintf('K-means done..\n');
     
     % shuffle
@@ -137,6 +137,15 @@ plot(loss_cumulative_llsvm, 'DisplayName', 'LLSVM');
 legend('-DynamicLegend');
 xlabel('Number of samples seen');
 ylabel('Hinge loss');
+grid on;
+
+%% plot learning curve epoch-wise
+hold on;
+plot(loss_llsvm_train, 'DisplayName', 'LLSVM');
+legend('-DynamicLegend');
+xlabel('epoch');
+ylabel('Hinge loss');
+title('Cumulative Learning Curve')
 grid on;
 
 
