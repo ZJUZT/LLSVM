@@ -4,6 +4,8 @@ rng('default');
 % load training data
 [num_sample, p] = size(train_X);
 
+class_num = max(train_Y);
+
 % parameters
 iter_num = 1;  
 epoch = 10;
@@ -28,8 +30,9 @@ for i=1:iter_num
     minmum_K = 100;
     maximum_K = 0;
     
-    b = zeros(1, anchors_num);
-    W = zeros(p, anchors_num);
+    b = zeros(class_num, 1, anchors_num);
+    W = zeros(class_num, p, anchors_num);
+    loss_cumulative_llsvm = zeros(1, num_sample); 
     loss_cumulative_JO = zeros(1, num_sample);                                     
     
     % initial anchor points via K-means
@@ -64,7 +67,8 @@ for i=1:iter_num
             end
             
             X = X_train(j,:);
-            y = Y_train(j,:);
+            y = -ones(1, class_num);
+            y(Y_train(j,:)) = 1;
             
             % pick nearest anchor points (adaptive KNN)
             [anchor_idx, D, lam] = Dynamic_KNN(anchors, X, LC);
@@ -72,8 +76,11 @@ for i=1:iter_num
             weight = lam - D;
             gamma = weight / sum(weight);
             
-            y_anchor = X * W(:,anchor_idx) + b(anchor_idx);
-            y_predict = gamma * y_anchor';
+            y_predict = zeros(1, class_num);
+            for m = 1:class_num
+                y_anchor = X * squeeze(W(m,:,anchor_idx)) + squeeze(b(m,:,anchor_idx))';
+                y_predict(m) = gamma * y_anchor';
+            end
             
             if minmum_K>nearest_neighbor
                 minmum_K=nearest_neighbor;
@@ -89,7 +96,8 @@ for i=1:iter_num
             nn_epoch = nn_epoch + nearest_neighbor;
             
             % hinge loss
-            err = 1 - y * y_predict;
+            err = 1 - y .* y_predict;
+            err(err<0) = 0;
             
             % cumulative training hinge loss
             idx = (t-1)*num_sample + j;
@@ -101,23 +109,35 @@ for i=1:iter_num
             
             % record loss epoch-wise
             loss_JO_train(i, t) = loss_cumulative_JO(idx);
+            err(err>0) = 1;
             
             % sgd update
-            if err > 0
-                W(:,anchor_idx) = W(:,anchor_idx) + learning_rate / (idx + t0) * y * repmat(gamma,p,1) .* repmat(X',1,nearest_neighbor);
-                b(anchor_idx) = b(anchor_idx) + learning_rate / (idx + t0) * y * gamma;
-                
-                % update anchor points (SAPL)
+%             if err > 0
+%                 W(:,anchor_idx) = W(:,anchor_idx) + learning_rate / (idx + t0) * y * repmat(gamma,p,1) .* repmat(X',1,nearest_neighbor);
+%                 b(anchor_idx) = b(anchor_idx) + learning_rate / (idx + t0) * y * gamma;
+%                 
+%                 % update anchor points (SAPL)
+%                 s = 2 * LC * (repmat(X, nearest_neighbor, 1) - anchors(anchor_idx, :));
+%                 base = -s * sum(weight.*y_anchor);
+%                 base = base + repmat(y_anchor',1,p).* s*sum(weight);
+%                 anchors(anchor_idx,:) = anchors(anchor_idx,:) + learning_rate / (idx + t0) * (y* base/(sum(weight).^2));
+%             end
+            
+            for m=1:class_num
+                W(m,:,anchor_idx) = squeeze(W(m,:,anchor_idx)) + learning_rate / (idx + t0) * y(m)*err(m) * repmat(gamma,p,1) .* repmat(X',1,nearest_neighbor);
+                b(m,:,anchor_idx) = squeeze(b(m,:,anchor_idx)) + learning_rate / (idx + t0) * y(m)*err(m) * gamma';
+            end
+            
+            % update anchor points (SAPL)
                 s = 2 * LC * (repmat(X, nearest_neighbor, 1) - anchors(anchor_idx, :));
                 base = -s * sum(weight.*y_anchor);
                 base = base + repmat(y_anchor',1,p).* s*sum(weight);
-                anchors(anchor_idx,:) = anchors(anchor_idx,:) + learning_rate / (idx + t0) * (y* base/(sum(weight).^2));
-            end
+                anchors(anchor_idx,:) = anchors(anchor_idx,:) + learning_rate / (idx + t0) * (sum(y.*err)* base/(sum(weight).^2));
             
             % regularization
             count = count - 1;
             if count <= 0
-                W(:,anchor_idx) = W(:,anchor_idx) * (1 - skip/(idx + t0));
+                W = W * (1 - skip/(idx + t0));
                 count = skip;
             end
             
@@ -139,7 +159,8 @@ for i=1:iter_num
             end
             
             X = test_X(k,:);
-            y = test_Y(k,:);
+            y = -ones(1, class_num);
+            y(test_Y(k,:)) = 1;
             
             [anchor_idx, D, lam] = Dynamic_KNN(anchors, X, LC);
             nearest_neighbor = length(anchor_idx);
@@ -147,15 +168,25 @@ for i=1:iter_num
             
             gamma = weight / sum(weight);
             
-            y_anchor = X * W(:,anchor_idx) + b(anchor_idx);
-            y_predict = gamma * y_anchor';
+%             y_anchor = X * W(:,anchor_idx) + b(anchor_idx);
+%             y_predict = gamma * y_anchor';
             
-            err = 1 - y * y_predict;
+            y_predict = zeros(1, class_num);
+            for m = 1:class_num
+                y_anchor = X * squeeze(W(m,:,anchor_idx)) + squeeze(b(m,:,anchor_idx))';
+                y_predict(m) = gamma * y_anchor';
+            end
             
-            loss = loss + max(0, err);
+            err = 1 - y .* y_predict;
+            
+            [~,label] = max(y_predict);
+            err(err<0) = 0;
+            
+            loss = loss + sum(err);
+            
             
             % accuracy
-            if (y_predict>=0 && y==1) || (y_predict<0&&y==-1)
+            if label == test_Y(k,:)
                 correct_num = correct_num + 1;
             end
         end

@@ -4,13 +4,15 @@ rng('default');
 % load training data
 [num_sample, p] = size(train_X);
 
+class_num = max(train_Y);
+
 % parameters
 iter_num = 1;
 epoch = 10;
-learning_rate = 1e3;
+learning_rate = 1e2;
 
-t0 = 1e4;
-skip = 1e1;
+t0 = 1e3;
+skip = 1e3;
 
 loss_svm_test = zeros(iter_num, epoch);
 loss_svm_train = zeros(iter_num, epoch);
@@ -19,8 +21,8 @@ accuracy_svm = zeros(iter_num, epoch);
 count = skip;
 
 for i=1:iter_num
-    b = 0;
-    W = zeros(1,p);
+    b = zeros(class_num,1);
+    W = zeros(class_num,p);
     loss_cumulative_svm = zeros(1, num_sample);                                     
     
     % shuffle
@@ -38,29 +40,35 @@ for i=1:iter_num
             end
             
             X = X_train(j,:);
-            y = Y_train(j,:);
+            y = -ones(1, class_num);
+            y(Y_train(j,:)) = 1;
+%             y = Y_train(j,:);
             
             y_predict = W*X' + b;
             
             % hinge loss
-            err = 1 - y * y_predict;
+            err = 1 - y .* y_predict';
+            err(err<0) = 0;
             
             % cumulative training hinge loss
             idx = (t-1)*num_sample + j;
             if idx == 1
-                loss_cumulative_svm(idx) = max(0,err);
+                loss_cumulative_svm(idx) = sum(err);
             else
-                loss_cumulative_svm(idx) = (loss_cumulative_svm(idx-1) * (idx-1) + max(0,err))/idx;
+                loss_cumulative_svm(idx) = (loss_cumulative_svm(idx-1) * (idx-1) + sum(err))/idx;
             end
             
+            err(err>0) = 1;
             % record loss epoch-wise
             loss_svm_train(i, t) = loss_cumulative_svm(idx);
             
             % sgd update
-            if err > 0
-                W = W + learning_rate / (idx + t0) *y * X;
-                b = b + learning_rate / (idx + t0) *y;
-            end
+%             if err > 0
+%                 W = W + learning_rate / (idx + t0) *y * X;
+%                 b = b + learning_rate / (idx + t0) *y;
+%             end
+            W = W + learning_rate / (idx + t0) *repmat((y.*err)',1,p) .* repmat(X,class_num,1);
+            b = b + learning_rate / (idx + t0) *(y.*err)';
             
             % regularization
             count = count - 1;
@@ -86,14 +94,21 @@ for i=1:iter_num
             end
             
             X = test_X(k,:);
-            y = test_Y(k,:);
+            y = -ones(1, class_num);
+            y(test_Y(k,:)) = 1;
             
             y_predict = W*X' + b;
-            err = 1 - y * y_predict;
-            loss = loss + max(0, err);
+            
+            
+            [~,label] = max(y_predict);
+            
+            err = 1 - y .* y_predict';
+            err(err<0) = 0;
+            
+            loss = loss + sum(err);
             
             % accuracy
-            if (y_predict>=0 && y==1) || (y_predict<0&&y==-1)
+            if label == test_Y(k,:)
                 correct_num = correct_num + 1;
             end
         end
@@ -128,6 +143,6 @@ title('Cumulative Learning Curve')
 grid on;
 
 %% liblinear
-model = liblinear_train(train_Y, sparse(train_X), '-s 3');
+model = liblinear_train(train_Y, sparse(train_X), '-s 2');
 [~, accuracy,~] = liblinear_predict(test_Y, sparse(test_X), model);
 
