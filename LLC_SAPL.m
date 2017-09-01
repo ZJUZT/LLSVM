@@ -8,6 +8,7 @@ rng('default');
 iter_num = 5;
 epoch = 10;
 learning_rate = 5e2;
+learning_rate_anchor = 1e-3;
 t0 = 1e4;
 skip = 1e2;
 
@@ -85,7 +86,7 @@ for i=1:iter_num
                 s = 2 * beta * (repmat(X, nearest_neighbor, 1) - anchors(anchor_idx, :)).*repmat(weight, p, 1)';
                 base = -s * sum(weight.*y_anchor);
                 base = base + repmat(y_anchor',1,p).* s*sum(weight);
-                anchors(anchor_idx,:) = anchors(anchor_idx,:) + learning_rate / (idx + t0) * (y* base/(sum(weight).^2));
+                anchors(anchor_idx,:) = anchors(anchor_idx,:) + learning_rate_anchor / (idx + t0) * (y* base/(sum(weight).^2));
             end
             
             % regularization
