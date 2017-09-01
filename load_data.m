@@ -23,14 +23,14 @@ letter_test = 'data/letter/test_data';
 % rcv1_test = 'data/rcv1/test_data';
 
 % w8a dataset
-% w8a_train = 'data/w8a/train_data';
-% w8a_test = 'data/w8a/test_data';
+w8a_train = 'data/w8a/train_data';
+w8a_test = 'data/w8a/test_data';
 
 % training_data = ijcnn_train;
 % test_data = ijcnn_test;
 
-% training_data = banana_train;
-% test_data = banana_test;
+training_data = banana_train;
+test_data = banana_test;
 
 % training_data = magic04_train;
 % test_data = magic04_test;
@@ -44,8 +44,8 @@ letter_test = 'data/letter/test_data';
 % training_data = usps_train;
 % test_data = usps_test;
 
-training_data = letter_train;
-test_data = letter_test;
+% training_data = letter_train;
+% test_data = letter_test;
 
 load(training_data);
 load(test_data);

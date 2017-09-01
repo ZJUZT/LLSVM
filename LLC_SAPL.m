@@ -29,7 +29,7 @@ for i=1:iter_num
     
     % initial anchor points via K-means
     fprintf('Start K-means...\n');
-    [~, anchors, ~, ~, ~] = litekmeans(train_X, anchors_num, 'Replicates', 10);
+    [~, anchors, ~, ~, ~] = litekmeans(train_X, anchors_num, 'Replicates', 1);
     fprintf('K-means done..\n');
     
 %     fprintf('Start liblinear initialization...\n');
@@ -107,7 +107,9 @@ for i=1:iter_num
         for k=1:num_sample_test
             
             if mod(k,1e4)==0
+                toc
                 fprintf('%d epoch(validation)---processing %dth sample\n',i, k);
+                tic
             end
             
             X = test_X(k,:);

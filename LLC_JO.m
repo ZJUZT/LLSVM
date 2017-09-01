@@ -9,15 +9,16 @@ iter_num = 1;
 epoch = 10;
 learning_rate = 1e2;
 t0 = 1e4;
-skip = 1e2;
+skip = 1e1;
     
 % locally linear anchor points
 anchors_num = 50;
 
-LC = 5;
+LC = 1;
 
 loss_JO_test = zeros(iter_num, epoch);
 loss_JO_train = zeros(iter_num, epoch);
+nn_test_JO = zeros(iter_num, epoch);
 accuracy_JO = zeros(iter_num, epoch);
 
 nn_train = zeros(iter_num, epoch);
@@ -34,7 +35,7 @@ for i=1:iter_num
     
     % initial anchor points via K-means
     fprintf('Start K-means...\n');
-    [~, anchors, ~, ~, ~] = litekmeans(train_X, anchors_num, 'Replicates', 10);
+    [~, anchors, ~, ~, ~] = litekmeans(train_X, anchors_num, 'Replicates', 1);
     fprintf('K-means done..\n');
     
 %     fprintf('Start liblinear initialization...\n');
@@ -131,11 +132,14 @@ for i=1:iter_num
         fprintf('validating\n');
         tic;
         [num_sample_test, ~] = size(test_X);
+        nn_test = 0;
         
         for k=1:num_sample_test
             
             if mod(k,1e4)==0
+                toc
                 fprintf('%d epoch(validation)---processing %dth sample\n',i, k);
+                tic
             end
             
             X = test_X(k,:);
@@ -143,6 +147,7 @@ for i=1:iter_num
             
             [anchor_idx, D, lam] = Dynamic_KNN(anchors, X, LC);
             nearest_neighbor = length(anchor_idx);
+            nn_test = nn_test + nearest_neighbor;
             weight = lam - D;
             
             gamma = weight / sum(weight);
@@ -165,6 +170,8 @@ for i=1:iter_num
         
         % record test accuracy epoch-wise
         accuracy_JO(i,t) = correct_num / num_sample_test;
+        
+        nn_test_JO(i,t) = nn_test /num_sample_test;
         
         toc;
         fprintf('validation done\n');
@@ -196,3 +203,23 @@ xlabel('epoch');
 ylabel('nn');
 title('Average NN number Learning Curve')
 grid on;
+
+%%
+x = [0.5,1,2,5,10,20,40, 50];
+y = [0.4266,0.4022,0.3730,0.3398,0.3411,0.3654,0.3874,0.4143];
+z = [19.8432, 14.068, 8.0765, 3.7899, 2.4170, 1.6845, 1.2125, 1.1047];
+a = [0,50];
+b = [0.3720,0.3720];
+plot(a,b,'k--','DisplayName', 'LLC-SAPL baseline');
+hold on
+plot(x,y,'b--o');
+title('sensity of lipschitz to noise ratio')
+hold on;
+grid on;
+ylabel('test hinge loss');
+yyaxis right
+plot(x,z,'r--o');
+xlabel('\mu');
+ylabel('average nn number');
+hold on;
+

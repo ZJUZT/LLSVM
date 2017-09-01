@@ -1,10 +1,10 @@
 % generate anchor points as non-balance way
 % reset rand seed
 rng('default');
-sz = 40;
+sz = 30;
 
-x = 0.5 * rand(1,100);
-y = 0.5 * rand(1,100);
+x = 0.5 * rand(1,60);
+y = 0.5 * rand(1,60);
 X = x;
 Y = y;
 % scatter(x,y);
@@ -34,15 +34,20 @@ scatter(X,Y,sz,'MarkerEdgeColor','b',...
 set(gca,'YTick',[]);
 set(gca,'XTick',[]);
 % set(gca, 'box', 'off')
-% hold on;
-% scatter(0.1,0.25,sz,'MarkerEdgeColor','r',...
-%               'MarkerFaceColor','r',...
-%               'LineWidth',1.5);
-
 hold on;
-scatter(0.6,0.7,sz,'MarkerEdgeColor','r',...
+scatter(0.1,0.25,sz,'MarkerEdgeColor','r',...
               'MarkerFaceColor','r',...
               'LineWidth',1.5);
+
+% hold on;
+% scatter(0.73,0.4,sz,'MarkerEdgeColor','r',...
+%               'MarkerFaceColor','r',...
+%               'LineWidth',1.5);
+          
+hold on;
+% plot(0.73,0.4,'o','MarkerEdgeColor','g','MarkerSize',170,'LineWidth',3);
+plot(0.1,0.25,'o','MarkerEdgeColor','g','MarkerSize',60,'LineWidth',3);
+
 fig = gcf;
 fig.PaperPositionMode = 'auto';
 fig_pos = fig.PaperPosition;

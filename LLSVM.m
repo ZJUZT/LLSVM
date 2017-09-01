@@ -6,7 +6,7 @@ rng('default');
 
 % parameters
 iter_num = 5;
-epoch = 10 ;
+epoch = 1 ;
 learning_rate = 1e5;
 
 t0 = 1e5;
@@ -29,7 +29,7 @@ for i=1:iter_num
     
     % initial anchor points via K-means
     fprintf('Start K-means...\n');
-    [~, anchors, ~, ~, ~] = litekmeans(train_X, anchors_num, 'Replicates', 10);
+    [~, anchors, ~, ~, ~] = litekmeans(train_X, anchors_num, 'Replicates', 1);
     fprintf('K-means done..\n');
     
     % shuffle

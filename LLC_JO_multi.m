@@ -16,7 +16,7 @@ skip = 1e2;
 % locally linear anchor points
 anchors_num = 50;
 
-LC = 5;
+LC = 0.5;
 
 loss_JO_test = zeros(iter_num, epoch);
 loss_JO_train = zeros(iter_num, epoch);
@@ -129,10 +129,10 @@ for i=1:iter_num
             end
             
             % update anchor points (SAPL)
-                s = 2 * LC * (repmat(X, nearest_neighbor, 1) - anchors(anchor_idx, :));
-                base = -s * sum(weight.*y_anchor);
-                base = base + repmat(y_anchor',1,p).* s*sum(weight);
-                anchors(anchor_idx,:) = anchors(anchor_idx,:) + learning_rate / (idx + t0) * (sum(y.*err)* base/(sum(weight).^2));
+            s = 2 * LC * (repmat(X, nearest_neighbor, 1) - anchors(anchor_idx, :));
+            base = -s * sum(weight.*y_anchor);
+            base = base + repmat(y_anchor',1,p).* s*sum(weight);
+            anchors(anchor_idx,:) = anchors(anchor_idx,:) + learning_rate / (idx + t0) * (sum(y.*err)* base/(sum(weight).^2));
             
             % regularization
             count = count - 1;
@@ -155,7 +155,9 @@ for i=1:iter_num
         for k=1:num_sample_test
             
             if mod(k,1e4)==0
+                toc
                 fprintf('%d epoch(validation)---processing %dth sample\n',i, k);
+                tic
             end
             
             X = test_X(k,:);

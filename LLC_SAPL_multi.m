@@ -7,9 +7,9 @@ rng('default');
 class_num = max(train_Y);
 
 % parameters
-iter_num = 5;
-epoch = 10;
-learning_rate = 5e2;
+iter_num = 1;
+epoch = 1;
+learning_rate = 1e3;
 t0 = 1e4;
 skip = 1e2;
 
@@ -63,12 +63,18 @@ for i=1:iter_num
             [anchor_idx, weight] = knn(anchors, X, nearest_neighbor, beta);
             gamma = weight / sum(weight);
             
-            y_predict = zeros(1, class_num);
+%             y_predict = zeros(1, class_num);
+            y_anchor = zeros(class_num, nearest_neighbor);
             for m = 1:class_num
-                y_anchor = X * squeeze(W(m,:,anchor_idx)) + squeeze(b(m,:,anchor_idx))';
-                y_predict(m) = gamma * y_anchor';
+                y_anchor(m,:) = X * squeeze(W(m,:,anchor_idx)) + squeeze(b(m,:,anchor_idx))';
+%                 y_predict(m) = gamma * y_anchor';
+%                 if 1 - y(m) * y_predict(m) > 0
+%                     y_anchor = y_anchor + y_anchor;
+%                 end
+                
             end
             
+            y_predict = gamma * y_anchor';
             % hinge loss
             err = 1 - y .* y_predict;
             err(err<0) = 0;
@@ -103,10 +109,11 @@ for i=1:iter_num
             end
             
             % update anchor points (SAPL)
+            y_anchor = sum(y_anchor .* repmat((y.*err)',1,nearest_neighbor));
             s = 2 * beta * (repmat(X, nearest_neighbor, 1) - anchors(anchor_idx, :)).*repmat(weight, p, 1)';
             base = -s * sum(weight.*y_anchor);
             base = base + repmat(y_anchor',1,p).* s*sum(weight);
-            anchors(anchor_idx,:) = anchors(anchor_idx,:) + learning_rate / (idx + t0) * (sum(y.*err)* base/(sum(weight).^2));
+            anchors(anchor_idx,:) = anchors(anchor_idx,:) + learning_rate / (idx + t0) * (base/(sum(weight).^2));
             
             % regularization
             count = count - 1;

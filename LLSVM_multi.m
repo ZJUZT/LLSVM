@@ -88,8 +88,10 @@ for i=1:iter_num
 %                 b(anchor_idx) = b(anchor_idx) + learning_rate / (idx + t0) * y * gamma;
 %             end
             for m=1:class_num
-                W(m,:,anchor_idx) = squeeze(W(m,:,anchor_idx)) + learning_rate / (idx + t0) * y(m)*err(m) * repmat(gamma,p,1) .* repmat(X',1,nearest_neighbor);
-                b(m,:,anchor_idx) = squeeze(b(m,:,anchor_idx)) + learning_rate / (idx + t0) * y(m)*err(m) * gamma';
+                if err(m) > 0
+                    W(m,:,anchor_idx) = squeeze(W(m,:,anchor_idx)) + learning_rate / (idx + t0) * y(m) * repmat(gamma,p,1) .* repmat(X',1,nearest_neighbor);
+                    b(m,:,anchor_idx) = squeeze(b(m,:,anchor_idx)) + learning_rate / (idx + t0) * y(m) * gamma';
+                end
             end
             
             % regularization
