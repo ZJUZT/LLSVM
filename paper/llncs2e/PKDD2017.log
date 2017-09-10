@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/W32TeX) (preloaded format=pdflatex 2017.7.29)  10 SEP 2017 18:12
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/W32TeX) (preloaded format=pdflatex 2017.7.29)  10 SEP 2017 19:08
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -493,31 +493,31 @@ Underfull \vbox (badness 6825) has occurred while \output is active []
 [11] <magic04.pdf, id=70, 775.89874pt x 453.695pt>
 File: magic04.pdf Graphic file (type pdf)
  <use magic04.pdf>
-Package pdftex.def Info: magic04.pdf used on input line 324.
+Package pdftex.def Info: magic04.pdf used on input line 326.
 (pdftex.def)             Requested size: 173.56177pt x 101.4816pt.
 
 <ijcnn.pdf, id=71, 775.89874pt x 453.695pt>
 File: ijcnn.pdf Graphic file (type pdf)
  <use ijcnn.pdf>
-Package pdftex.def Info: ijcnn.pdf used on input line 326.
+Package pdftex.def Info: ijcnn.pdf used on input line 328.
 (pdftex.def)             Requested size: 173.56177pt x 101.4816pt.
 
 <magic04_nn.pdf, id=72, 775.89874pt x 453.695pt>
 File: magic04_nn.pdf Graphic file (type pdf)
  <use magic04_nn.pdf>
-Package pdftex.def Info: magic04_nn.pdf used on input line 333.
+Package pdftex.def Info: magic04_nn.pdf used on input line 335.
 (pdftex.def)             Requested size: 173.56177pt x 101.4816pt.
 
 <ijcnn_nn.pdf, id=73, 775.89874pt x 453.695pt>
 File: ijcnn_nn.pdf Graphic file (type pdf)
  <use ijcnn_nn.pdf>
-Package pdftex.def Info: ijcnn_nn.pdf used on input line 335.
+Package pdftex.def Info: ijcnn_nn.pdf used on input line 337.
 (pdftex.def)             Requested size: 173.56177pt x 101.4816pt.
 
 <magic04_mu.pdf, id=74, 775.89874pt x 453.695pt>
 File: magic04_mu.pdf Graphic file (type pdf)
  <use magic04_mu.pdf>
-Package pdftex.def Info: magic04_mu.pdf used on input line 343.
+Package pdftex.def Info: magic04_mu.pdf used on input line 345.
 (pdftex.def)             Requested size: 277.69987pt x 162.38164pt.
  [12]
 [13 <./magic04.pdf> <./ijcnn.pdf>]
@@ -527,7 +527,7 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 Missing character: There is no Ã in font cmr9!
 Missing character: There is no ¶ in font cmr9!
 
-Underfull \hbox (badness 1642) in paragraph at lines 354--355
+Underfull \hbox (badness 1642) in paragraph at lines 356--357
 []\OT1/cmr/m/n/9 Yu K, Zhang T, Gong Y. Non-lin-ear learn-ing us-ing lo-cal co-
 or-di-nate cod-
  []
@@ -536,13 +536,13 @@ Missing character: There is no â in font cmr9!
 Missing character: There is no € in font cmr9!
 Missing character: There is no “ in font cmr9!
 
-Underfull \hbox (badness 1168) in paragraph at lines 372--373
+Underfull \hbox (badness 1168) in paragraph at lines 374--375
 []\OT1/cmr/m/n/9 Yu K, Zhang T, Gong Y. Non-lin-ear learn-ing us-ing lo-cal co-
 or-di-nate cod-
  []
 
 [15]
-Underfull \hbox (badness 4543) in paragraph at lines 388--389
+Underfull \hbox (badness 4543) in paragraph at lines 390--391
 []\OT1/cmr/m/n/9 Yang J, Yu K, Huang T. Su-per-vised translation-invariant spar
 se cod-
  []
@@ -583,7 +583,7 @@ ic/amsfonts/cm/cmsy7.pfb><g:/texlive/2017/texmf-dist/fonts/type1/public/amsfont
 s/cm/cmsy9.pfb><g:/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt9
 .pfb><g:/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb
 >
-Output written on PKDD2017.pdf (16 pages, 361965 bytes).
+Output written on PKDD2017.pdf (16 pages, 362145 bytes).
 PDF statistics:
  250 PDF objects out of 1000 (max. 8388607)
  194 compressed objects within 2 object streams

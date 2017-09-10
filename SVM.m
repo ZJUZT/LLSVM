@@ -1,133 +1,116 @@
-% reset rand seed
-rng('default');
+function [ model, metric ] = svm( training, validation, pars )
+%FM Summary of this function goes here
+%   Detailed explanation goes here
 
-% load training data
-[num_sample, p] = size(train_X);
-
-% parameters
-iter_num = 1;
-epoch = 1;
-learning_rate = 1e3;
-
-t0 = 1e4;
-skip = 1e1;
-
-loss_svm_test = zeros(iter_num, epoch);
-loss_svm_train = zeros(iter_num, epoch);
-accuracy_svm = zeros(iter_num, epoch);
-
-count = skip;
-
-for i=1:iter_num
-    b = 0;
-    W = zeros(1,p);
-    loss_cumulative_svm = zeros(1, num_sample);                                     
+    train_X = training.train_X;
+    train_Y = training.train_Y;
     
-    % shuffle
-    re_idx = randperm(num_sample);
-    X_train = train_X(re_idx,:);
-    Y_train = train_Y(re_idx,:);
-    
-    for t=1:epoch
+    test_X = validation.test_X;
+    test_Y = validation.test_Y;
+
+    [num_sample, ~] = size(train_X);
+
+    % parameters
+    iter_num = pars.iter_num;
+    learning_rate = pars.learning_rate;
+    skip = pars.skip;
+    count = skip;
+    t0 = pars.t0;
+
+    beta = pars.beta;
+
+    epoch = pars.epoch;
+
+    loss_fm_test = zeros(iter_num, epoch);
+    loss_fm_train = zeros(iter_num, epoch);
+    accuracy_fm = zeros(iter_num, epoch);
+
+    for i=1:iter_num
+
         tic;
-        for j=1:num_sample
-            if mod(j,1e3)==0
-                toc;
-                fprintf('%d iter(%d epoch)---processing %dth sample\n', i, t, j);
-                tic;
+
+        w0 = pars.w0;
+        W = pars.W;
+%         V = pars.V;
+        
+        re_idx = randperm(num_sample);
+        X_train = train_X(re_idx,:);
+        Y_train = train_Y(re_idx);
+
+        for t=1:epoch
+
+            loss = 0;
+            for j=1:num_sample
+
+                X = X_train(j,:);
+                y = Y_train(j,:);
+
+                idx = (t-1)*num_sample + j;
+                
+                y_predict = W*X' + w0;
+
+                % SGD update
+                err = max(0, 1-y*y_predict);
+                loss = loss + err;
+                
+                if err > 0
+                    w0_ = learning_rate / (idx + t0) * (-y);
+                    w0 = w0 - w0_;
+                    W_ = learning_rate / (idx + t0) * (-y*X);
+                    W = W - W_;
+                end
+
+                % regularization
+                count = count - 1;
+                if count <= 0
+                    W = W * (1 - skip/(idx + t0));
+                    count = skip;
+                end
+
             end
-            
-            X = X_train(j,:);
-            y = Y_train(j,:);
-            
-            y_predict = W*X' + b;
-            
-            % hinge loss
-            err = 1 - y * y_predict;
-            
-            % cumulative training hinge loss
-            idx = (t-1)*num_sample + j;
-            if idx == 1
-                loss_cumulative_svm(idx) = max(0,err);
-            else
-                loss_cumulative_svm(idx) = (loss_cumulative_svm(idx-1) * (idx-1) + max(0,err))/idx;
+
+            loss_fm_train(i,t) = loss / num_sample;
+            fprintf('[iter %d epoch %2d]---train loss:%.4f\t',i, t, loss_fm_train(i,t));
+
+            % validate
+            loss = 0;
+            correct_num = 0;
+            [num_sample_test, ~] = size(test_X);
+            for k=1:num_sample_test
+
+                X = test_X(k,:);
+                y = test_Y(k,:);
+
+                y_predict = W*X' + w0;
+                err = max(0, 1-y_predict*y);
+                loss = loss + err;
+
+                if (y_predict>=0 && y==1) || (y_predict<0&&y==-1)
+                    correct_num = correct_num + 1;
+                end
+
             end
-            
-            % record loss epoch-wise
-            loss_svm_train(i, t) = loss_cumulative_svm(idx);
-            
-            % sgd update
-            if err > 0
-                W = W + learning_rate / (idx + t0) *y * X;
-                b = b + learning_rate / (idx + t0) *y;
-            end
-            
-            % regularization
-            count = count - 1;
-            if count <= 0
-                W = W * (1 - skip/(idx + t0));
-                count = skip;
-            end
+
+            loss_fm_test(i,t) = loss / num_sample_test;
+            fprintf('test loss:%.4f\t', loss_fm_test(i,t));
+            accuracy_fm(i,t) = correct_num/num_sample_test;
+            fprintf('\ttest accuracy:%.4f', accuracy_fm(i,t));
+
+            fprintf('\n');
+
         end
-        
-        % validate epoch-wise
-        loss = 0.0;
-        correct_num = 0;
-        fprintf('validating\n');
-        tic;
-        [num_sample_test, ~] = size(test_X);
-        
-        for k=1:num_sample_test
-            
-            if mod(k,1e4)==0
-                toc;
-                fprintf('%d epoch(validation)---processing %dth sample\n',i, k);
-                tic;
-            end
-            
-            X = test_X(k,:);
-            y = test_Y(k,:);
-            
-            y_predict = W*X' + b;
-            err = 1 - y * y_predict;
-            loss = loss + max(0, err);
-            
-            % accuracy
-            if (y_predict>=0 && y==1) || (y_predict<0&&y==-1)
-                correct_num = correct_num + 1;
-            end
-        end
-        
-        % record test hinge loss epoch-wise
-        loss_svm_test(i, t) = loss / num_sample_test;
-        
-        % record test accuracy epoch-wise
-        accuracy_svm(i,t) = correct_num / num_sample_test;
         
         toc;
-        fprintf('validation done\n');
-       
     end
+    
+    % pack output
+    % model
+    model.w0 = w0;
+    model.W = W;
+    
+    % metric
+    metric.loss_train = loss_fm_train;
+    metric.loss_test = loss_fm_test;
+    metric.loss_accuracy = accuracy_fm;
+
 end
-
-
-%% plot cumulative learning curve
-plot(loss_cumulative_svm, 'DisplayName', 'Linear SVM');
-legend('-DynamicLegend');
-xlabel('Number of samples seen');
-ylabel('Hinge loss');
-grid on;
-
-%% plot learning curve epoch-wise
-hold on;
-plot(loss_svm_train(1,:),'k--o', 'DisplayName', 'SVM');
-legend('-DynamicLegend');
-xlabel('epoch');
-ylabel('Hinge loss');
-title('Cumulative Learning Curve')
-grid on;
-
-%% liblinear
-model = liblinear_train(train_Y, sparse(train_X), '-s 3');
-[~, accuracy,~] = liblinear_predict(test_Y, sparse(test_X), model);
-

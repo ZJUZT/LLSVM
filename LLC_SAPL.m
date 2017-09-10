@@ -1,162 +1,138 @@
-% reset rand seed
-rng('default');
+function [ model, metric ] = llsvm( training, validation, pars )
+%FM Summary of this function goes here
+%   Detailed explanation goes here
 
-% load training data
-[num_sample, p] = size(train_X);
-
-% parameters
-iter_num = 5;
-epoch = 10;
-learning_rate = 5e2;
-learning_rate_anchor = 1e-3;
-t0 = 1e4;
-skip = 1e2;
-
-% locally linear anchor points
-anchors_num = 50;
-nearest_neighbor = 5;
-
-beta = 1;
-
-loss_SAPL_test = zeros(iter_num, epoch);
-loss_SAPL_train = zeros(iter_num, epoch);
-accuracy_SAPL = zeros(iter_num, epoch);
-
-for i=1:iter_num
-    b = zeros(1, anchors_num);
-    W = zeros(p, anchors_num);
+    train_X = training.train_X;
+    train_Y = training.train_Y;
     
-    loss_cumulative_SAPL = zeros(1, num_sample);                                     
-    
-    % initial anchor points via K-means
-    fprintf('Start K-means...\n');
-    [~, anchors, ~, ~, ~] = litekmeans(train_X, anchors_num, 'Replicates', 1);
-    fprintf('K-means done..\n');
-    
-%     fprintf('Start liblinear initialization...\n');
-%     [W, b] = initial_paras(train_X, train_Y, anchors);
-%     fprintf('liblinear initialization done..\n');
-    
-    % shuffle
-    re_idx = randperm(num_sample);
-    X_train = train_X(re_idx,:);
-    Y_train = train_Y(re_idx,:);
-    
+    test_X = validation.test_X;
+    test_Y = validation.test_Y;
+
+    [num_sample, p] = size(train_X);
+
+    % parameters
+    iter_num = pars.iter_num;
+    learning_rate = pars.learning_rate;
+    learning_rate_anchor = pars.learning_rate_anchor;
+    skip = pars.skip;
     count = skip;
-    
-    for t=1:epoch
+    t0 = pars.t0;
+
+    epoch = pars.epoch;
+
+    beta = pars.beta;
+
+    % locally linear anchor points
+    anchors_num = pars.anchors_num; 
+    nearest_neighbor = pars.nearest_neighbor;
+
+    loss_fm_test = zeros(iter_num, epoch);
+    loss_fm_train = zeros(iter_num, epoch);
+    accuracy_fm = zeros(iter_num, epoch);
+
+    for i=1:iter_num
+
         tic;
-        for j=1:num_sample
-            if mod(j,1e3)==0
-                toc;
-                fprintf('%d iter(%d epoch)---processing %dth sample\n', i, t, j);
-                tic;
-            end
-            
-            X = X_train(j,:);
-            y = Y_train(j,:);
-            
-            % pick nearest anchor points
-            [anchor_idx, weight] = knn(anchors, X, nearest_neighbor, beta);
-            gamma = weight / sum(weight);
-            
-            y_anchor = X * W(:,anchor_idx) + b(anchor_idx);
-            y_predict = gamma * y_anchor';
-            
-            % hinge loss
-            err = 1 - y * y_predict;
-            
-            % cumulative training hinge loss
-            idx = (t-1)*num_sample + j;
-            if idx == 1
-                loss_cumulative_SAPL(idx) = max(0,err);
-            else
-                loss_cumulative_SAPL(idx) = (loss_cumulative_SAPL(idx-1) * (idx-1) + max(0,err))/idx;
-            end
-            
-            % record loss epoch-wise
-            loss_SAPL_train(i, t) = loss_cumulative_SAPL(idx);
-            
-            % sgd update
-            if err > 0
-                W(:,anchor_idx) = W(:,anchor_idx) + learning_rate / (idx + t0) * y * repmat(gamma,p,1) .* repmat(X',1,nearest_neighbor);
-                b(anchor_idx) = b(anchor_idx) + learning_rate / (idx + t0) * y * gamma;
+
+        w0 = pars.w0;
+        W = pars.W;
+%         V = pars.V;
+        
+        re_idx = randperm(num_sample);
+        X_train = train_X(re_idx,:);
+        Y_train = train_Y(re_idx);
+
+        % initial anchor points via K-means
+        fprintf('Start K-means...\n');
+        [~, anchors, ~, ~, ~] = litekmeans(train_X, anchors_num, 'Replicates', 1);
+        fprintf('K-means done..\n');
+
+        for t=1:epoch
+
+            loss = 0;
+            for j=1:num_sample
+
+                X = X_train(j,:);
+                y = Y_train(j,:);
+
+                idx = (t-1)*num_sample + j;
                 
-                % update anchor points (SAPL)
-                s = 2 * beta * (repmat(X, nearest_neighbor, 1) - anchors(anchor_idx, :)).*repmat(weight, p, 1)';
-                base = -s * sum(weight.*y_anchor);
-                base = base + repmat(y_anchor',1,p).* s*sum(weight);
-                anchors(anchor_idx,:) = anchors(anchor_idx,:) + learning_rate_anchor / (idx + t0) * (y* base/(sum(weight).^2));
+                % pick nearest anchor points
+                [anchor_idx, weight] = knn(anchors, X, nearest_neighbor, beta);
+                gamma = weight / sum(weight);
+                
+                y_anchor = X * W(:,anchor_idx) + w0(anchor_idx);
+                y_predict = gamma * y_anchor';
+                % SGD update
+                err = max(0, 1-y*y_predict);
+                loss = loss + err;
+                
+                if err > 0
+                    W(:,anchor_idx) = W(:,anchor_idx) + learning_rate / (idx + t0) * y * repmat(gamma,p,1) .* repmat(X',1,nearest_neighbor);
+                    w0(anchor_idx) = w0(anchor_idx) + learning_rate / (idx + t0) * y * gamma;
+
+                    % update anchor points (SAPL)
+                    s = 2 * beta * (repmat(X, nearest_neighbor, 1) - anchors(anchor_idx, :)).*repmat(weight, p, 1)';
+                    base = -s * sum(weight.*y_anchor);
+                    base = base + repmat(y_anchor',1,p).* s*sum(weight);
+                    anchors(anchor_idx,:) = anchors(anchor_idx,:) + learning_rate_anchor / (idx + t0) * (y* base/(sum(weight).^2));
+                end
+
+                % regularization
+                count = count - 1;
+                if count <= 0
+                    W = W * (1 - skip/(idx + t0));
+                    count = skip;
+                end
+
             end
-            
-            % regularization
-            count = count - 1;
-            if count <= 0
-                W(:,anchor_idx) = W(:,anchor_idx) * (1 - skip/(idx + t0));
-                count = skip;
+
+            loss_fm_train(i,t) = loss / num_sample;
+            fprintf('[iter %d epoch %2d]---train loss:%.4f\t',i, t, loss_fm_train(i,t));
+
+            % validate
+            loss = 0;
+            correct_num = 0;
+            [num_sample_test, ~] = size(test_X);
+            for k=1:num_sample_test
+
+                X = test_X(k,:);
+                y = test_Y(k,:);
+
+                [anchor_idx, weight] = knn(anchors, X, nearest_neighbor, beta);
+                gamma = weight / sum(weight);
+                
+                y_anchor = X * W(:,anchor_idx) + w0(anchor_idx);
+                y_predict = gamma * y_anchor';
+                err = max(0, 1-y_predict*y);
+                loss = loss + err;
+
+                if (y_predict>=0 && y==1) || (y_predict<0&&y==-1)
+                    correct_num = correct_num + 1;
+                end
+
             end
-            
+
+            loss_fm_test(i,t) = loss / num_sample_test;
+            fprintf('test loss:%.4f\t', loss_fm_test(i,t));
+            accuracy_fm(i,t) = correct_num/num_sample_test;
+            fprintf('\ttest accuracy:%.4f', accuracy_fm(i,t));
+
+            fprintf('\n');
+
         end
-        
-        % validate epoch-wise
-        loss = 0.0;
-        correct_num = 0;
-        fprintf('validating\n');
-        tic;
-        [num_sample_test, ~] = size(test_X);
-        
-        for k=1:num_sample_test
-            
-            if mod(k,1e4)==0
-                toc
-                fprintf('%d epoch(validation)---processing %dth sample\n',i, k);
-                tic
-            end
-            
-            X = test_X(k,:);
-            y = test_Y(k,:);
-            
-            [anchor_idx, weight] = knn(anchors, X, nearest_neighbor, beta);
-            gamma = weight / sum(weight);
-            
-            y_anchor = X * W(:,anchor_idx) + b(anchor_idx);
-            y_predict = gamma * y_anchor';
-            
-            err = 1 - y * y_predict;
-            
-            loss = loss + max(0, err);
-            
-            % accuracy 
-            if (y_predict>=0 && y==1) || (y_predict<0&&y==-1)
-                correct_num = correct_num + 1;
-            end
-        end
-        
-        % record test hinge loss epoch-wise
-        loss_SAPL_test(i, t) = loss / num_sample_test;
-        
-        % record test accuracy epoch-wise
-        accuracy_SAPL(i,t) = correct_num / num_sample_test;
         
         toc;
-        fprintf('validation done\n');
-       
     end
+    
+    % pack output
+    % model
+    model.w0 = w0;
+    model.W = W;
+    
+    % metric
+    metric.loss_train = loss_fm_train;
+    metric.loss_test = loss_fm_test;
+    metric.loss_accuracy = accuracy_fm;
+
 end
-
-
-%% plot cumulative learning curve
-plot(loss_cumulative_SAPL, 'DisplayName', 'LLC-SAPL');
-legend('-DynamicLegend');
-xlabel('Number of samples seen');
-ylabel('Hinge loss');
-grid on;
-
-%% plot learning curve epoch-wise
-hold on
-plot(loss_SAPL_train(1,:),'r--o', 'DisplayName', 'LLC-SAPL');
-legend('-DynamicLegend');
-xlabel('epoch');
-ylabel('Hinge loss');
-title('Cumulative Learning Curve')
-grid on;
