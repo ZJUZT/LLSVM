@@ -100,8 +100,8 @@ ONP_test = 'data/OnlineNewsPopularity/test_data';
 % training_data = magic04_train;
 % test_data = magic04_test;
 
-% training_data = phishing_train;
-% test_data = phishing_test;
+training_data = phishing_train;
+test_data = phishing_test;
 
 % training_data = ijcnn_train;
 % test_data = ijcnn_test;
@@ -121,8 +121,8 @@ ONP_test = 'data/OnlineNewsPopularity/test_data';
 % training_data = protein_train;
 % test_data = protein_test;
 
-training_data = covtype_train;
-test_data = covtype_test;
+% training_data = covtype_train;
+% test_data = covtype_test;
 
 % training_data = realsim_train;
 % test_data = realsim_test;
