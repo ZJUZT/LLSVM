@@ -40,7 +40,7 @@ function [ model, metric ] = llc_djo( training, validation, pars )
 
     for i=1:iter_num
 
-        tic;
+        % tic;
 
         w0 = pars.w0;
         W = pars.W;
@@ -105,7 +105,7 @@ function [ model, metric ] = llc_djo( training, validation, pars )
                     %anchors_score = ones(size(W,2),1);
                     %W = W  - skip1/(idx + t0)*(2*W/sum(sum(W.^2))-2*(diag(anchors_score)*pinv(W))');
                    % W = W  - skip1/(idx + t0)*(2*W/sum(sum(W.^2))-2*(W*diag(anchors_score)));
-                   W = W  - skip1/(idx + t0)*(2*W/sum(sum(W.^2))-2*(W*(W'*W+epsilon*eye(size(W,2)))^(-1)*diag(anchors_score)));
+                    W = W  - skip1/(idx + t0)*(2*W/sum(sum(W.^2))-2*(W*(W'*W+epsilon*eye(size(W,2)))^(-1)*diag(anchors_score)));
                     count = skip;
                 end
 
@@ -122,6 +122,7 @@ function [ model, metric ] = llc_djo( training, validation, pars )
             min_nn = anchors_num;
             max_nn = 0;
             nn_test = 0;
+            tic;
             for k=1:num_sample_test
 
                 X = test_X(k,:);
@@ -152,6 +153,7 @@ function [ model, metric ] = llc_djo( training, validation, pars )
                 end
 
             end
+            toc;
 
             loss_fm_test(i,t) = loss / num_sample_test;
             fprintf('test loss:%.4f\t', loss_fm_test(i,t));
@@ -167,7 +169,7 @@ function [ model, metric ] = llc_djo( training, validation, pars )
 
         end
         
-        toc;
+        % toc;
     end
     
     % pack output

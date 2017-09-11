@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/W32TeX) (preloaded format=pdflatex 2017.7.29)  10 SEP 2017 19:08
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/W32TeX) (preloaded format=pdflatex 2017.7.29)  11 SEP 2017 08:01
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -493,41 +493,39 @@ Underfull \vbox (badness 6825) has occurred while \output is active []
 [11] <magic04.pdf, id=70, 775.89874pt x 453.695pt>
 File: magic04.pdf Graphic file (type pdf)
  <use magic04.pdf>
-Package pdftex.def Info: magic04.pdf used on input line 326.
+Package pdftex.def Info: magic04.pdf used on input line 345.
 (pdftex.def)             Requested size: 173.56177pt x 101.4816pt.
 
 <ijcnn.pdf, id=71, 775.89874pt x 453.695pt>
 File: ijcnn.pdf Graphic file (type pdf)
  <use ijcnn.pdf>
-Package pdftex.def Info: ijcnn.pdf used on input line 328.
+Package pdftex.def Info: ijcnn.pdf used on input line 347.
 (pdftex.def)             Requested size: 173.56177pt x 101.4816pt.
 
 <magic04_nn.pdf, id=72, 775.89874pt x 453.695pt>
 File: magic04_nn.pdf Graphic file (type pdf)
  <use magic04_nn.pdf>
-Package pdftex.def Info: magic04_nn.pdf used on input line 335.
+Package pdftex.def Info: magic04_nn.pdf used on input line 354.
 (pdftex.def)             Requested size: 173.56177pt x 101.4816pt.
 
 <ijcnn_nn.pdf, id=73, 775.89874pt x 453.695pt>
 File: ijcnn_nn.pdf Graphic file (type pdf)
  <use ijcnn_nn.pdf>
-Package pdftex.def Info: ijcnn_nn.pdf used on input line 337.
+Package pdftex.def Info: ijcnn_nn.pdf used on input line 356.
 (pdftex.def)             Requested size: 173.56177pt x 101.4816pt.
 
 <magic04_mu.pdf, id=74, 775.89874pt x 453.695pt>
 File: magic04_mu.pdf Graphic file (type pdf)
  <use magic04_mu.pdf>
-Package pdftex.def Info: magic04_mu.pdf used on input line 345.
+Package pdftex.def Info: magic04_mu.pdf used on input line 364.
 (pdftex.def)             Requested size: 277.69987pt x 162.38164pt.
  [12]
-[13 <./magic04.pdf> <./ijcnn.pdf>]
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [14 <./magic04_nn.pdf> <./ijcnn_nn.pdf> <./magic04_mu.pdf>]
+[13] [14 <./magic04.pdf> <./ijcnn.pdf> <./magic04_nn.pdf> <./ijcnn_nn.pdf>]
 Missing character: There is no Ã in font cmr9!
 Missing character: There is no ¶ in font cmr9!
 
-Underfull \hbox (badness 1642) in paragraph at lines 356--357
+[15 <./magic04_mu.pdf>]
+Underfull \hbox (badness 1642) in paragraph at lines 375--376
 []\OT1/cmr/m/n/9 Yu K, Zhang T, Gong Y. Non-lin-ear learn-ing us-ing lo-cal co-
 or-di-nate cod-
  []
@@ -536,57 +534,57 @@ Missing character: There is no â in font cmr9!
 Missing character: There is no € in font cmr9!
 Missing character: There is no “ in font cmr9!
 
-Underfull \hbox (badness 1168) in paragraph at lines 374--375
+Underfull \hbox (badness 1168) in paragraph at lines 393--394
 []\OT1/cmr/m/n/9 Yu K, Zhang T, Gong Y. Non-lin-ear learn-ing us-ing lo-cal co-
 or-di-nate cod-
  []
 
-[15]
-Underfull \hbox (badness 4543) in paragraph at lines 390--391
+
+Underfull \hbox (badness 4543) in paragraph at lines 409--410
 []\OT1/cmr/m/n/9 Yang J, Yu K, Huang T. Su-per-vised translation-invariant spar
 se cod-
  []
 
-[16] (./PKDD2017.aux) ) 
+[16] [17] (./PKDD2017.aux) ) 
 Here is how much of TeX's memory you used:
- 5530 strings out of 492995
- 80741 string characters out of 6136402
- 179742 words of memory out of 5000000
- 8982 multiletter control sequences out of 15000+600000
+ 5560 strings out of 492995
+ 81041 string characters out of 6136402
+ 188742 words of memory out of 5000000
+ 9012 multiletter control sequences out of 15000+600000
  14421 words of font info for 54 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  44i,18n,49p,1668b,662s stack positions out of 5000i,500n,10000p,200000b,80000s
-<g:/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/
-cm/cmbx10.pfb><g:/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12
-.pfb><g:/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx5.pfb><g:/t
-exlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx6.pfb><g:/texlive/201
-7/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx7.pfb><g:/texlive/2017/texmf-di
-st/fonts/type1/public/amsfonts/cm/cmbx9.pfb><g:/texlive/2017/texmf-dist/fonts/t
-ype1/public/amsfonts/cm/cmex10.pfb><g:/texlive/2017/texmf-dist/fonts/type1/publ
-ic/amsfonts/cmextra/cmex7.pfb><g:/texlive/2017/texmf-dist/fonts/type1/public/am
-sfonts/cmextra/cmex9.pfb><g:/texlive/2017/texmf-dist/fonts/type1/public/amsfont
-s/cm/cmmi10.pfb><g:/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi
-5.pfb><g:/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb><g:/
-texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb><g:/texlive/20
-17/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb><g:/texlive/2017/texmf-d
-ist/fonts/type1/public/amsfonts/cm/cmmib10.pfb><g:/texlive/2017/texmf-dist/font
-s/type1/public/amsfonts/cmextra/cmmib7.pfb><g:/texlive/2017/texmf-dist/fonts/ty
-pe1/public/amsfonts/cmextra/cmmib9.pfb><g:/texlive/2017/texmf-dist/fonts/type1/
-public/amsfonts/cm/cmr10.pfb><g:/texlive/2017/texmf-dist/fonts/type1/public/ams
-fonts/cm/cmr5.pfb><g:/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cm
-r6.pfb><g:/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb><g:/
-texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb><g:/texlive/201
-7/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><g:/texlive/2017/texmf-d
-ist/fonts/type1/public/amsfonts/cm/cmsy5.pfb><g:/texlive/2017/texmf-dist/fonts/
-type1/public/amsfonts/cm/cmsy6.pfb><g:/texlive/2017/texmf-dist/fonts/type1/publ
-ic/amsfonts/cm/cmsy7.pfb><g:/texlive/2017/texmf-dist/fonts/type1/public/amsfont
-s/cm/cmsy9.pfb><g:/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt9
-.pfb><g:/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb
->
-Output written on PKDD2017.pdf (16 pages, 362145 bytes).
+<g:/texlive/2017/texmf-dist/fonts/type1/public/amsf
+onts/cm/cmbx10.pfb><g:/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/c
+mbx12.pfb><g:/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx5.pfb>
+<g:/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx6.pfb><g:/texliv
+e/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx7.pfb><g:/texlive/2017/tex
+mf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb><g:/texlive/2017/texmf-dist/fo
+nts/type1/public/amsfonts/cm/cmex10.pfb><g:/texlive/2017/texmf-dist/fonts/type1
+/public/amsfonts/cmextra/cmex7.pfb><g:/texlive/2017/texmf-dist/fonts/type1/publ
+ic/amsfonts/cmextra/cmex9.pfb><g:/texlive/2017/texmf-dist/fonts/type1/public/am
+sfonts/cm/cmmi10.pfb><g:/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm
+/cmmi5.pfb><g:/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb
+><g:/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb><g:/texli
+ve/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb><g:/texlive/2017/te
+xmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb><g:/texlive/2017/texmf-dist
+/fonts/type1/public/amsfonts/cmextra/cmmib7.pfb><g:/texlive/2017/texmf-dist/fon
+ts/type1/public/amsfonts/cmextra/cmmib9.pfb><g:/texlive/2017/texmf-dist/fonts/t
+ype1/public/amsfonts/cm/cmr10.pfb><g:/texlive/2017/texmf-dist/fonts/type1/publi
+c/amsfonts/cm/cmr5.pfb><g:/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/
+cm/cmr6.pfb><g:/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb
+><g:/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb><g:/texliv
+e/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><g:/texlive/2017/te
+xmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb><g:/texlive/2017/texmf-dist/f
+onts/type1/public/amsfonts/cm/cmsy6.pfb><g:/texlive/2017/texmf-dist/fonts/type1
+/public/amsfonts/cm/cmsy7.pfb><g:/texlive/2017/texmf-dist/fonts/type1/public/am
+sfonts/cm/cmsy9.pfb><g:/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/
+cmtt9.pfb><g:/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm1
+0.pfb>
+Output written on PKDD2017.pdf (17 pages, 363355 bytes).
 PDF statistics:
- 250 PDF objects out of 1000 (max. 8388607)
- 194 compressed objects within 2 object streams
+ 253 PDF objects out of 1000 (max. 8388607)
+ 196 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
  36 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -105,6 +105,8 @@ function [ model, metric ] = llc_jo( training, validation, pars )
             min_nn = anchors_num;
             max_nn = 0;
             nn_test = 0;
+
+            tic;
             for k=1:num_sample_test
 
                 X = test_X(k,:);
@@ -135,6 +137,7 @@ function [ model, metric ] = llc_jo( training, validation, pars )
                 end
 
             end
+            toc;
 
             loss_fm_test(i,t) = loss / num_sample_test;
             fprintf('test loss:%.4f\t', loss_fm_test(i,t));
@@ -150,7 +153,7 @@ function [ model, metric ] = llc_jo( training, validation, pars )
 
         end
         
-        toc;
+        % toc;
     end
     
     % pack output

@@ -17,8 +17,6 @@ function [ model, metric ] = svm( training, validation, pars )
     count = skip;
     t0 = pars.t0;
 
-    beta = pars.beta;
-
     epoch = pars.epoch;
 
     loss_fm_test = zeros(iter_num, epoch);
@@ -27,7 +25,7 @@ function [ model, metric ] = svm( training, validation, pars )
 
     for i=1:iter_num
 
-        tic;
+        % tic;
 
         w0 = pars.w0;
         W = pars.W;
@@ -76,6 +74,8 @@ function [ model, metric ] = svm( training, validation, pars )
             loss = 0;
             correct_num = 0;
             [num_sample_test, ~] = size(test_X);
+
+            tic;
             for k=1:num_sample_test
 
                 X = test_X(k,:);
@@ -90,6 +90,7 @@ function [ model, metric ] = svm( training, validation, pars )
                 end
 
             end
+            toc;
 
             loss_fm_test(i,t) = loss / num_sample_test;
             fprintf('test loss:%.4f\t', loss_fm_test(i,t));
@@ -100,7 +101,7 @@ function [ model, metric ] = svm( training, validation, pars )
 
         end
         
-        toc;
+        % toc;
     end
     
     % pack output
