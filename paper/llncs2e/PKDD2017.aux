@@ -40,40 +40,41 @@
 \citation{17}
 \@writefile{toc}{\contentsline {section}{\numberline {3}Jointly Optimized Locally Linear Classifier}{5}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Optimized Localized Soft-assignment Coding}{5}}
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Motivation for adaptively picking anchor points. In the two scenarios above, the same distribution of anchor points are given (represented by blue dots). The new data point to be estimated is shown as a red dot. Intuitively, in the left scenario it would be resonable to invole more anchor points in the local coding phase while in the right scenario considering fewer anchor points may relieve unreliable estimation of the membership of distint anchor points. In the conventional coding scheme, without loss of generality, fix $k = 8$, the surrounding anchor points range is denoted by green circle. Clearly, in the second scenairo, involving distant anchor points may lead to unreliable estimation of final prediction.\relax }}{6}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Motivation for adaptively picking anchor points. In the two scenarios above, the same distribution of anchor points are given (represented by blue dots). The new data point to be estimated is shown as a red dot. Intuitively, in the left scenario it would be resonable to invole more anchor points in the local coding phase while in the right scenario considering fewer anchor points may relieve unreliable estimation of the membership of distint anchor points. In the conventional coding scheme, without loss of generality, fix $k = 8$, the surrounding anchor points range is denoted by green circle. Clearly, in the second scenairo, involving distant anchor points may lead to unreliable estimation of final prediction.}}{6}}
 \@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {}}}{6}}
 \@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {}}}{6}}
 \citation{4}
 \citation{6}
 \citation{4}
 \citation{4}
-\@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces Optimized Localized Soft-assignment Coding Algorithm\relax }}{8}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces Optimized Localized Soft-assignment Coding Algorithm}}{8}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.2}The Stochastic Gradient Descent Algorithm for LLC-JO}{8}}
 \citation{13}
 \citation{14}
 \citation{13}
 \citation{15}
-\@writefile{loa}{\contentsline {algorithm}{\numberline {2}{\ignorespaces Joint optimized Locally Linear Classifier (LLC-JO)\relax }}{10}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {2}{\ignorespaces Joint optimized Locally Linear Classifier (LLC-JO)}}{10}}
 \@writefile{toc}{\contentsline {section}{\numberline {4}Experiments}{10}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Experimental Setup}{10}}
+\@writefile{toc}{\contentsline {subsubsection}{Datasets \& Evaluation Metrics.}{10}}
 \citation{2}
 \citation{4}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Experimental Setup}{11}}
-\@writefile{toc}{\contentsline {subsubsection}{Datasets \& Evaluation Metrics.}{11}}
-\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Basic statistics of datasets\relax }}{11}}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Basic statistics of datasets}}{11}}
 \@writefile{toc}{\contentsline {subsubsection}{Model Comparsion.}{11}}
 \@writefile{toc}{\contentsline {subsubsection}{Parameter Settings.}{12}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Experimental Results \& Analysis}{12}}
-\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Comparison of different algorithms in terms of train loss, test loss, classification accuracy and test time (normalized to test time of SVM)\relax }}{13}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Cumulative Hinge Loss in learning process on Magic04 and IJCNN dataset.\relax }}{14}}
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {Magic04}}}{14}}
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {IJCNN}}}{14}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Cumulative Average Number of Nearest Neighbors in learning process on Magic04 and IJCNN dataset.\relax }}{14}}
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {Magic04}}}{14}}
-\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {IJCNN}}}{14}}
+\@writefile{toc}{\contentsline {subsubsection}{Evaluation of Parameter Sensitivity}{12}}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Comparison of different algorithms in terms of train loss, test loss, classification accuracy and test time (normalized to test time of SVM)}}{13}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Epoch-wise demonstration of different algorithms with hinge loss on test data}}{14}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {phishing}}}{14}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {Magic04}}}{14}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(c)}{\ignorespaces {IJCNN}}}{14}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(d)}{\ignorespaces {w8a}}}{14}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(e)}{\ignorespaces {connect-4}}}{14}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(f)}{\ignorespaces {Covtype}}}{14}}
+\newlabel{allfig}{{2}{14}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Conclusion}{14}}
 \bibcite{1}{1}
-\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Sensitivity of Lipschitz to noise ratio on dataset Magic04. The red line indicates the average number of nearest neighbors in test data while the blue line denotes the test hingle loss in terms of different value of $\mu $. The black line denotes the corresponding test hinge loss of LLC-SAPL baseline.\relax }}{15}}
-\@writefile{toc}{\contentsline {subsubsection}{Evaluation of Parameter Sensitivity}{15}}
-\@writefile{toc}{\contentsline {section}{\numberline {5}Conclusion}{15}}
 \bibcite{2}{2}
 \bibcite{3}{3}
 \bibcite{4}{4}
@@ -82,6 +83,16 @@
 \bibcite{7}{7}
 \bibcite{8}{8}
 \bibcite{9}{9}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Epoch-wise demonstration of LLC-DJO nn learning curve on test data}}{15}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {phishing}}}{15}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {Magic04}}}{15}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(c)}{\ignorespaces {IJCNN}}}{15}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(d)}{\ignorespaces {w8a}}}{15}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(e)}{\ignorespaces {connect-4}}}{15}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(f)}{\ignorespaces {Covtype}}}{15}}
+\newlabel{allfig}{{3}{15}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Sensitivity of Lipschitz to noise ratio on dataset Magic04. The red line indicates the average number of nearest neighbors in test data while the blue line denotes the test hingle loss in terms of different value of $\mu $. The black line denotes the corresponding test hinge loss of LLC-SAPL baseline.}}{16}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces anchor points number vs hingeloss}}{16}}
 \bibcite{10}{10}
 \bibcite{11}{11}
 \bibcite{12}{12}

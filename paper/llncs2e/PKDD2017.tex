@@ -5,8 +5,8 @@
 \usepackage{algorithm,algorithmic}
 \usepackage{mathtools}
 \usepackage{graphicx}
-\usepackage{subfig}
 \usepackage{tabu}
+\usepackage{subfigure}
 \DeclarePairedDelimiter\abs{\lvert}{\rvert}
 \DeclarePairedDelimiter\norm{\lVert}{\rVert}
 
@@ -121,13 +121,13 @@
 	\section{Jointly Optimized Locally Linear Classifier}
 	\subsection{Optimized Localized Soft-assignment Coding}
 	Although localized soft-assignment coding  achieves a good balance between the local region constraint and sensitivity to the variance of distance, the number of nearest anchor points $k$ is commonly picked via cross-validation and fixed for the whole dataset. This strategy is based on the assumption that each data point shares similar local manifold. However, it is often the case that the dataset is generated from an unknown distribution which in turn leads to an unknown distributed anchor points, the local manifold may vary from data point to data point. In other words the optimum number of anchor points involved in the local coding is different for each data point as Figure 1 shows.
-	\begin{figure}[!tbp]
+	\begin{figure*}[!htb]
 		\centering
-		\subfloat[]{\includegraphics[width=0.45\textwidth]{knn1.pdf}}
+		\subfigure[]{\includegraphics[width=0.45\textwidth]{knn1.pdf}}
 		\hfill
-		\subfloat[]{\includegraphics[width=0.45\textwidth]{knn2.pdf}}
+		\subfigure[]{\includegraphics[width=0.45\textwidth]{knn2.pdf}}
 		\caption{Motivation for adaptively picking anchor points. In the two scenarios above, the same distribution of anchor points are given (represented by blue dots). The new data point to be estimated is shown as a red dot. Intuitively, in the left scenario it would be resonable to invole more anchor points in the local coding phase while in the right scenario considering fewer anchor points may relieve unreliable estimation of the membership of distint anchor points. In the conventional coding scheme, without loss of generality, fix $k = 8$, the surrounding anchor points range is denoted by green circle. Clearly, in the second scenairo, involving distant anchor points may lead to unreliable estimation of final prediction.}
-	\end{figure}
+	\end{figure*}
 	 Moreover, the anchor points pick and local coding are seperate phases in former localized soft-assignment coding. To address this issue, we propose a unified local coding  where the number of anchor points and local coding coordinate for each nearest anchor point are optimized in a joint fashion.
 	
 	To begin with, we first introduce the optimization problem for the local coding coordinates $\gamma_{\x,\v}$. Recall we seek to find the best local approximation in a sense of minimizing the distance between this approximation and the ground truth. Let $\Theta(\x)$ denotes the classifier varying according to the location of data point $\x$.
@@ -341,29 +341,75 @@
 
 	To further explore the convergence of different algorithms, we give the online cumulative hinge loss performance of different methods in Figure 2. From the results, we can see that LLC-JO outperforms the other algorithms. From those online training curves, we can validate the optimized localized soft-assignment achieve a tight coupling of the classifier and local coding technique.
 	
-	\begin{figure}[!tbp]
-		\centering
-		\subfloat[Magic04]{\includegraphics[width=0.5\textwidth]{magic04.pdf}}
-		\hfill
-		\subfloat[IJCNN]{\includegraphics[width=0.5\textwidth]{ijcnn.pdf}}
-		\caption{Cumulative Hinge Loss in learning process on Magic04 and IJCNN dataset.}
-	\end{figure}
+%	\begin{figure}[!tbp]
+%		\centering
+%		\subfloat[Magic04]{\includegraphics[width=0.5\textwidth]{magic04.pdf}}
+%		\hfill
+%		\subfloat[IJCNN]{\includegraphics[width=0.5\textwidth]{ijcnn.pdf}}
+%		\caption{Cumulative Hinge Loss in learning process on Magic04 and IJCNN dataset.}
+%	\end{figure}
 
 	To illustrate the combination of supervised anchor point learning and optimum local coding coordinates learning, we give the average number of nearest neighbors learning curve in Figure 3. As the figure shows, the average number of anchor points involved in coding phase is decreasing and prone to converge. The reason may be that during the learning process, the anchor points are being optimized and gain more discriminative information of the whole dataset. These two methods contribute to a more stable and efficient online learning algorithm for locally linear classifiers.
-	\begin{figure}[!tbp]
+	\begin{figure*}[!htb]
 		\centering
-		\subfloat[Magic04]{\includegraphics[width=0.5\textwidth]{magic04_nn.pdf}}
-		\hfill
-		\subfloat[IJCNN]{\includegraphics[width=0.5\textwidth]{ijcnn_nn.pdf}}
-		\caption{Cumulative Average Number of Nearest Neighbors in learning process on Magic04 and IJCNN dataset.}
-	\end{figure}
+		\subfigure[phishing]{
+			\includegraphics[width=0.32\textwidth]{figs/phishing.pdf}
+		}
+		\subfigure[Magic04]{
+			\includegraphics[width=0.32\textwidth]{figs/magic04.pdf}
+		}
+		\subfigure[IJCNN]{
+			\includegraphics[width=0.32\textwidth]{figs/ijcnn.pdf}
+		}
+		\subfigure[w8a]{
+			\includegraphics[width=0.32\textwidth]{figs/w8a.pdf}
+		}
+		\subfigure[connect-4]{
+			\includegraphics[width=0.32\textwidth]{figs/connect4.pdf}
+		}
+		\subfigure[Covtype]{
+			\includegraphics[width=0.32\textwidth]{figs/covtype.pdf}
+		}
+		\caption{Epoch-wise demonstration of different algorithms with hinge loss on test data}
+		\label{allfig}
+	\end{figure*}
+
+	\begin{figure*}[!htb]
+		\centering
+		\subfigure[phishing]{
+			\includegraphics[width=0.32\textwidth]{figs/phishing_nn.pdf}
+		}
+		\subfigure[Magic04]{
+			\includegraphics[width=0.32\textwidth]{figs/magic04_nn.pdf}
+		}
+		\subfigure[IJCNN]{
+			\includegraphics[width=0.32\textwidth]{figs/ijcnn_nn.pdf}
+		}
+		\subfigure[w8a]{
+			\includegraphics[width=0.32\textwidth]{figs/w8a_nn.pdf}
+		}
+		\subfigure[connect-4]{
+			\includegraphics[width=0.32\textwidth]{figs/connect4_nn.pdf}
+		}
+		\subfigure[Covtype]{
+			\includegraphics[width=0.32\textwidth]{figs/covtype_nn.pdf}
+		}
+		\caption{Epoch-wise demonstration of LLC-DJO nn learning curve on test data}
+		\label{allfig}
+	\end{figure*}
 
 	\subsubsection{Evaluation of Parameter Sensitivity}
 	For LLC-JO, Lipschitz to noise ratio $\mu$ is the key parameter. It would be interesting to explore how the algorithm may be sensitive to the setting of $\mu$. Figure 4 shows the results of parameter sensitive evaluations using different values of $\mu$. As $\mu$ grows, the number of anchor points involved in the coding phase tends to be smaller. There exists a range for $\mu$ that ensures LLC-JO outperforms LLC-SAPL, too small or too large $\mu$ will deteriorate the classification performance, which also proves that the number of anchor points involved in coding phase has a significant impact on localized soft-assignment coding scheme.
 	\begin{figure}[!tbp]
 		\centering
-		\includegraphics[width=0.8\textwidth]{magic04_mu.pdf}
+		\includegraphics[width=0.8\textwidth]{figs/magic04_lip.pdf}
 		\caption{Sensitivity of Lipschitz to noise ratio on dataset Magic04. The red line indicates the average number of nearest neighbors in test data while the blue line denotes the test hingle loss in terms of different value of $\mu$. The black line denotes the corresponding test hinge loss of LLC-SAPL baseline.}
+	\end{figure}
+
+	\begin{figure}[!tbp]
+		\centering
+		\includegraphics[width=0.8\textwidth]{figs/anchor_points.pdf}
+		\caption{anchor points number vs hingeloss}
 	\end{figure}
 	\section{Conclusion}
 	In this paper, we propose an optimized local soft-assignment coding scheme. Different from existing localized soft-assignment coding, we formulate a joint optimization over anchor points, local coding coordinates and classifiers' variables by minimizing the distance of local approximation to the ground truth. In this novel coding scheme, the anchor points and corresponding local coding coordinates are optimized in a joint way. This design gives full consideration to that the local manifold structure may vary from data point to data point. Based on the new coding scheme, we give the algorithm for joint optimized locally linear classifier(LLC-JO). Experiment results on several benchmarks demonstrates that our algorithm achieves lower hinge loss and better predicitive accuracy than other competitive methods which employ a fixed local coding scheme.
