@@ -66,8 +66,8 @@ disp('Training LLC-SAPL...')
 rng('default');
 pars.skip = 1e1;
 
-pars.learning_rate = 1e4;
-pars.learning_rate_anchor = 1e3;
+pars.learning_rate = 1e5;
+pars.learning_rate_anchor = 1e4;
 pars.t0 = 1e5;
 
 pars.LC = 1;
@@ -84,13 +84,13 @@ disp('Training LLC-JO...')
 rng('default');
 pars.skip = 1e1;
 
-pars.learning_rate = 1e4;
+pars.learning_rate = 1e5;
 pars.learning_rate_anchor = 1e4;
 pars.t0 = 1e5;
 
 pars.epsilon = 1e-1;
 pars.skip1 = 1e2;
-pars.LC = 2;
+pars.LC = 0.4;
 pars.anchors_num = 50;
 % pars.nearest_neighbor = 10;
 
@@ -149,6 +149,10 @@ ylabel('average\_nn');
 grid on;
 hold on;
 
+%%
+metric_llc_jo.loss_train = 0.4122;
+metric_llc_jo.loss_test = [0.5211, 0.4585, 0.4446, 0.4417, 0.4326, 0.4216, 0.4199,0.4190,0.4192,0.4190];
+metric_llc_jo.loss_accuracy = 0.8175;
 %% stats
 clear stats;
 %-----------mean
