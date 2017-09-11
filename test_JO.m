@@ -84,14 +84,14 @@ disp('Training LLC-JO...')
 rng('default');
 pars.skip = 1e1;
 
-pars.learning_rate = 1e5;
-pars.learning_rate_anchor = 1e4;
+pars.learning_rate = 1e4;
+pars.learning_rate_anchor = 1e3;
 pars.t0 = 1e5;
 
 pars.epsilon = 1e-1;
-pars.skip1 = 1e2;
-pars.LC = 0.4;
-pars.anchors_num = 50;
+pars.skip1 = 1e1;
+pars.LC = 40;
+pars.anchors_num = 100;
 % pars.nearest_neighbor = 10;
 
 pars.w0 = zeros(1, pars.anchors_num);
@@ -166,8 +166,25 @@ xlabel('anchor points number');
 
 %% plot lip noise
 
-ylabel('hinge loss');
+%%
+x = [0.5,1,2,5,10,20,30,40];
+y = [0.3892,0.3633,0.3532,0.3365,0.3277,0.3411,0.3761,0.3905];
+z = [57.8016, 38.3879, 24.5396, 12.3528, 7.2692, 3.2388, 1.8170, 1.2334];
+a = [0,50];
+b = [0.3923,0.3923];
+plot(a,b,'k--','DisplayName', 'LLC-SAPL baseline');
+legend('-DynamicLegend');
+hold on
+plot(x,y,'r--o','DisplayName','LLC-DJO');
+legend('-DynamicLegend');
+hold on;
 grid on;
+ylabel('hinge loss');
+yyaxis right
+plot(x,z,'b--o','DisplayName','average\_nn');
+legend('-DynamicLegend');
+xlabel('\mu');
+ylabel('average nn number');
 hold on;
 %% stats
 clear stats;
