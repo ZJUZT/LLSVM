@@ -67,11 +67,11 @@ rng('default');
 pars.skip = 1e1;
 
 pars.learning_rate = 1e4;
-pars.learning_rate_anchor = 1e3;
+pars.learning_rate_anchor = 1e2;
 pars.t0 = 1e5;
 
-pars.LC = 1;
-pars.anchors_num = 50; 
+pars.LC = 5;
+pars.anchors_num = 40; 
 % pars.nearest_neighbor = 10;
 
 pars.w0 = zeros(1, pars.anchors_num);
@@ -85,13 +85,13 @@ rng('default');
 pars.skip = 1e1;
 
 pars.learning_rate = 1e4;
-pars.learning_rate_anchor = 1e4;
+pars.learning_rate_anchor = 1e2;
 pars.t0 = 1e5;
 
 pars.epsilon = 1e-1;
 pars.skip1 = 1e2;
-pars.LC = 2;
-pars.anchors_num = 50;
+pars.LC = 5;
+pars.anchors_num = 40;
 % pars.nearest_neighbor = 10;
 
 pars.w0 = zeros(1, pars.anchors_num);
@@ -142,13 +142,29 @@ grid on;
 hold on;
 
 %% plot nn_avg
-plot(metric_llc_djo.nn_avg_test(1,:),'r--o','DisplayName','LLC-DJO');
+plot(metric_llc_jo.nn_avg_test(1,:),'r--o','DisplayName','LLC-DJO');
 legend('-DynamicLegend');
 xlabel('epoch');
 ylabel('average\_nn');
 grid on;
 hold on;
 
+%% plot anchor_num (JO vs DJO)
+an_jo = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
+loss_jo = [0.1318,0.1197,0.1125,0.1072,0.1053,0.1040,0.1034,0.1030,0.1028,0.1026 ];
+
+loss_djo = [0.1327,0.1134,0.1045,0.0997,0.0980,0.0970,0.0968,0.0965,0.0963 0.0965];
+plot(an_jo, loss_jo,'c--o','DisplayName','LLC-JO');
+hold on
+plot(an_jo, loss_djo,'r--o','DisplayName','LLC-DJO');
+legend('-DynamicLegend');
+xlabel('anchor points number');
+
+%% plot lip noise
+
+ylabel('hinge loss');
+grid on;
+hold on;
 %% stats
 clear stats;
 %-----------mean
