@@ -31,7 +31,7 @@ disp('Training SVM...')
 rng('default');
 pars.skip = 1e1;
 
-pars.learning_rate = 1e5 ;
+pars.learning_rate = 1e4 ;
 pars.t0 = 1e5;
 
 pars.beta = 1;

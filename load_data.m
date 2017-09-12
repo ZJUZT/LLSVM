@@ -97,8 +97,8 @@ ONP_test = 'data/OnlineNewsPopularity/test_data';
 % training_data = banana_train;
 % test_data = banana_test;
 
-training_data = magic04_train;
-test_data = magic04_test;
+% training_data = magic04_train;
+% test_data = magic04_test;
 
 % training_data = phishing_train;
 % test_data = phishing_test;
@@ -130,8 +130,8 @@ test_data = magic04_test;
 % training_data = ONP_train;
 % test_data = ONP_test;
 
-% training_data = w8a_train;
-% test_data = w8a_test;
+training_data = w8a_train;
+test_data = w8a_test;
 
 % training_data = a9a_train;
 % test_data = a9a_test;
